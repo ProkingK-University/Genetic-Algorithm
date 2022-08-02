@@ -2,7 +2,7 @@
 
 Chromosome::Chromosome(int numGenes, RandomGenerator* rand)
 {
-
+    
 }
 
 Chromosome::Chromosome(Chromosome* chromosome)
@@ -47,5 +47,5 @@ std::string toString()
 
 bool* Chromosome::getGenes()
 {
-    
+
 }
