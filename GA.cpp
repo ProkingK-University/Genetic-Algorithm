@@ -198,7 +198,25 @@ double GA::calculateStd(FitnessFunction* fitnessFunction)
 
 double GA::calculateVariance()
 {
-    return 69;
+    double var = 0;
+    int numChromosomes = 0;
+
+    for (int i = 0; i < populationSize; i++)
+    {
+        for (int j = 0; j < populationSize; j++)
+        {
+            if (population[i]->toString() == population[j]->toString())
+            {
+                break;
+            }
+        }
+
+        numChromosomes++;
+    }
+    
+    var = numChromosomes / populationSize;
+
+    return var;
 }
 
 void GA::setPopulation(Chromosome** p)
