@@ -1,4 +1,5 @@
 #include "GA.h"
+#include <iostream>
 
 GA::GA(int populationSize, RandomGenerator* rand, int numGenes, int selectionSize) : populationSize(populationSize), selectionSize(selectionSize)
 {
@@ -76,6 +77,11 @@ double** GA::run(FitnessFunction* fitnessFunction, int numGenerations)
 
     for (int i = 0; i < numGenerations; i++)
     {
+        results[i] = new double[3];
+    }
+
+    for (int i = 0; i < numGenerations; i++)
+    {
         Chromosome** P = run(fitnessFunction);
 
         population = P;
@@ -89,6 +95,20 @@ double** GA::run(FitnessFunction* fitnessFunction, int numGenerations)
 }
 
 Chromosome** GA::selection(FitnessFunction* fitnessFunction)
+{
+    int j = 0;
+    Chromosome** p = new Chromosome*[populationSize];
+
+    for (int i = populationSize-1; i >= 0; i--)
+    {
+        p[j] = new Chromosome(inverseSelection(fitnessFunction)[i]);
+        j++;
+    }
+
+    return p;
+}
+
+Chromosome** GA::inverseSelection(FitnessFunction* fitnessFunction)
 {
     double fitness[populationSize];
     Chromosome** p = new Chromosome*[populationSize];
@@ -126,20 +146,6 @@ Chromosome** GA::selection(FitnessFunction* fitnessFunction)
         }  
     }
     
-    return p;
-}
-
-Chromosome** GA::inverseSelection(FitnessFunction* fitnessFunction)
-{
-    int j = 0;
-    Chromosome** p = new Chromosome*[populationSize];
-
-    for (int i = populationSize-1; i >= 0; i--)
-    {
-        p[j] = new Chromosome(selection(fitnessFunction)[i]);
-        j++;
-    }
-
     return p;
 }
 
@@ -199,11 +205,12 @@ double GA::calculateStd(FitnessFunction* fitnessFunction)
 double GA::calculateVariance()
 {
     double var = 0;
-    int numChromosomes = 0;
+    double numChromosomes = 0;
 
     for (int i = 0; i < populationSize; i++)
     {
-        for (int j = 0; j < populationSize; j++)
+        int j = 0;
+        for (j = 0; j < i; j++)
         {
             if (population[i]->toString() == population[j]->toString())
             {
@@ -211,9 +218,12 @@ double GA::calculateVariance()
             }
         }
 
-        numChromosomes++;
+        if (i == j)
+        {
+            numChromosomes++;
+        }
     }
-    
+
     var = numChromosomes / populationSize;
 
     return var;
