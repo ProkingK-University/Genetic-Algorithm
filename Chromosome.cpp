@@ -1,5 +1,7 @@
 #include "Chromosome.h"
 
+#include<iostream>
+
 Chromosome::Chromosome(int numGenes, RandomGenerator* rand)
 {
     if (numGenes < 0)
@@ -45,7 +47,7 @@ Chromosome::Chromosome(Chromosome* chromosome)
 
         for (int i = 0; i < numGenes; i++)
         {
-            genes[i] = getGenes()[i];
+            genes[i] = chromosome->getGenes()[i];
         }
     }  
 }
@@ -62,7 +64,7 @@ Chromosome::Chromosome(bool* genes, int numGenes)
     {
         this->numGenes = numGenes;
 
-        genes = new bool[this->numGenes];
+        this->genes = new bool[this->numGenes];
 
         if (genes == NULL)
         {
@@ -170,11 +172,11 @@ std::string Chromosome::toString()
         {
             if (genes[i] == true)
             {
-                str =+ "1";
+                str += "1";
             }
-            else if(genes[i == false])
+            else if(genes[i] == false)
             {
-                str =+ "0";
+                str += "0";
             }
         }
 
