@@ -1,4 +1,5 @@
 #include "GA.h"
+#include <sstream>
 #include <iostream>
 
 GA::GA(int populationSize, RandomGenerator* rand, int numGenes, int selectionSize) : populationSize(populationSize), selectionSize(selectionSize)
@@ -28,16 +29,43 @@ GA::~GA()
 {
     for (int i = 0; i < populationSize; i++)
     {
+        population[i] = NULL;
         delete population[i];
     }
 
+    population = NULL;
     delete [] population;
 }
 
 Chromosome** GA::run(FitnessFunction* fitnessFunction)
 {
+    std::cout<< "original" <<std::endl;
+    for (int i = 0; i < populationSize; i++)
+    {
+        std::cout<< population[i]->toString() <<std::endl;
+    }
+
+    std::cout<<std::endl;
+
     Chromosome** winners = selection(fitnessFunction);
+
+    std::cout<< "winners" <<std::endl;
+    for (int i = 0; i < populationSize; i++)
+    {
+        std::cout<< winners[i]->toString() <<std::endl;
+    }
+
+    std::cout<<std::endl;
+
     Chromosome** losers = inverseSelection(fitnessFunction);
+
+    std::cout<< "losers" <<std::endl;
+    for (int i = 0; i < populationSize; i++)
+    {
+        std::cout<< losers[i]->toString() <<std::endl;
+    }
+
+    std::cout<<std::endl;
 
     Chromosome** offspring = new Chromosome*[3*selectionSize];
 
@@ -47,8 +75,9 @@ Chromosome** GA::run(FitnessFunction* fitnessFunction)
     {
         Chromosome** nChromosomes = crossOver(winners[i], winners[i+1]);
 
-        offspring[i] = nChromosomes[i];
-        offspring[i+1] = nChromosomes[i];
+        offspring[i] = nChromosomes[0];
+        offspring[i+1] = nChromosomes[1];
+        i++;
     }
 
     for (int i = 0; i < selectionSize; i++)
@@ -58,15 +87,27 @@ Chromosome** GA::run(FitnessFunction* fitnessFunction)
     
     P = population;
 
-    int u = 0;
-
     for (int i = 0; i < 3*selectionSize; i++)
     {
-        Chromosome dyingChromosome = losers[i];
+        Chromosome* dyingChromosome = new Chromosome(losers[i]);
 
-        P[u] = offspring[i];
-        u++;
+        for (int u = 0; u < populationSize; u++)
+        {
+            if (P[u]->toString() == dyingChromosome->toString())
+            {
+                P[u] = offspring[i];
+                break;
+            }
+        }
     }
+
+    std::cout<< "outcome" <<std::endl;
+    for (int i = 0; i < populationSize; i++)
+    {
+        std::cout<< P[i]->toString() <<std::endl;
+    }
+
+    std::cout<<std::endl;
     
     return P;
 }
@@ -96,13 +137,61 @@ double** GA::run(FitnessFunction* fitnessFunction, int numGenerations)
 
 Chromosome** GA::selection(FitnessFunction* fitnessFunction)
 {
-    int j = 0;
+    /*int j = 0;
     Chromosome** p = new Chromosome*[populationSize];
 
     for (int i = populationSize-1; i >= 0; i--)
     {
         p[j] = new Chromosome(inverseSelection(fitnessFunction)[i]);
         j++;
+    }*/
+
+    double fitness[populationSize];
+    std::string id[populationSize];
+    
+    Chromosome** p = new Chromosome*[populationSize];
+
+    for (int i = 0; i < populationSize; i++)
+    {
+        fitness[i] = population[i]->fitness(fitnessFunction, population[i], population[i]->getNumGenes());
+
+        id[i] = population[i]->toString();
+    }
+
+    int j = 0;
+
+    double k1 = 0;
+    std::string k2 = "";
+
+    for(int i = 1; i < populationSize; i++)
+    {
+        k1 = fitness[i];
+        k2 = id[i];
+
+        j = i-1;
+
+        while(j >= 0 && fitness[j] < k1)
+        {
+            fitness[j+1] = fitness[j];
+            id[j+1] = id[j];
+
+            j--;
+        }
+
+        fitness[j+1] = k1;
+        id[j+1] = k2;
+    }
+
+    for (int i = 0; i < populationSize; i++)
+    {
+        for (int j = 0; j < populationSize; j++)
+        {
+            if (fitness[i] == population[j]->fitness(fitnessFunction, population[j], population[j]->getNumGenes()) && id[i] == population[j]->toString())
+            {
+                p[i] = new Chromosome (population[j]);
+                break;
+            }
+        }  
     }
 
     return p;
@@ -110,41 +199,62 @@ Chromosome** GA::selection(FitnessFunction* fitnessFunction)
 
 Chromosome** GA::inverseSelection(FitnessFunction* fitnessFunction)
 {
-    double fitness[populationSize];
+    int j = 0;
+
+    Chromosome** p = new Chromosome*[populationSize];
+
+    for (int i = populationSize-1; i >= 0; i--)
+    {
+        p[j] = new Chromosome(selection(fitnessFunction)[i]);
+        j++;
+    }
+    
+    /*double fitness[populationSize];
+    std::string id[populationSize];
+
     Chromosome** p = new Chromosome*[populationSize];
 
     for (int i = 0; i < populationSize; i++)
     {
         fitness[i] = population[i]->fitness(fitnessFunction, population[i], population[i]->getNumGenes());
+
+        id[i] = population[i]->toString();
     }
 
     int i = 0;
     int j = 0;
-    double key = 0;
+
+    double k1 = 0;
+    std::string k2 = "";
 
     for (i = 1; i < populationSize; i++)
     { 
-        key = fitness[i];
+        k1 = fitness[i];
+        k2 = id[i];
         j = i - 1;
 
-        while (j >= 0 && fitness[j] > key)
+        while (j >= 0 && fitness[j] > k1)
         { 
-            fitness[j + 1] = fitness[j]; 
+            fitness[j + 1] = fitness[j];
+            id[j+1] = id[j];
             j = j - 1; 
-        } 
-        fitness[j + 1] = key;
+        }
+
+        fitness[j + 1] = k1;
+        id[j+1] = k2;
     }
 
     for (int i = 0; i < populationSize; i++)
     {
         for (int j = 0; j < populationSize; j++)
         {
-            if (fitness[i] == population[j]->fitness(fitnessFunction, population[j], population[j]->getNumGenes()))
+            if (fitness[i] == population[j]->fitness(fitnessFunction, population[j], population[j]->getNumGenes()) && id[i] == population[j]->toString())
             {
                 p[i] = new Chromosome (population[j]);
+                break;
             }
         }  
-    }
+    }*/
     
     return p;
 }
@@ -235,4 +345,12 @@ void GA::setPopulation(Chromosome** p)
     {
         population[i] = new Chromosome(p[i]);
     }
+}
+
+int strToInt(std::string line)
+{
+    std::stringstream ss(line);
+    int x = 0;
+    ss >> x;
+    return x;
 }
