@@ -39,36 +39,10 @@ GA::~GA()
 
 Chromosome** GA::run(FitnessFunction* fitnessFunction)
 {
-    std::cout<< "original" <<std::endl;
-    for (int i = 0; i < populationSize; i++)
-    {
-        std::cout<< population[i]->toString() <<std::endl;
-    }
-
-    std::cout<<std::endl;
-
     Chromosome** winners = selection(fitnessFunction);
-
-    std::cout<< "winners" <<std::endl;
-    for (int i = 0; i < populationSize; i++)
-    {
-        std::cout<< winners[i]->toString() <<std::endl;
-    }
-
-    std::cout<<std::endl;
-
     Chromosome** losers = inverseSelection(fitnessFunction);
 
-    std::cout<< "losers" <<std::endl;
-    for (int i = 0; i < populationSize; i++)
-    {
-        std::cout<< losers[i]->toString() <<std::endl;
-    }
-
-    std::cout<<std::endl;
-
     Chromosome** offspring = new Chromosome*[3*selectionSize];
-
     Chromosome** P = new Chromosome*[populationSize];
 
     for (int i = 0; i < 2*selectionSize; i++)
@@ -100,14 +74,6 @@ Chromosome** GA::run(FitnessFunction* fitnessFunction)
             }
         }
     }
-
-    std::cout<< "outcome" <<std::endl;
-    for (int i = 0; i < populationSize; i++)
-    {
-        std::cout<< P[i]->toString() <<std::endl;
-    }
-
-    std::cout<<std::endl;
     
     return P;
 }
@@ -304,7 +270,7 @@ double GA::calculateStd(FitnessFunction* fitnessFunction)
 
   mean = sum / populationSize;
 
-  for(i = 0; i < 10; ++i) 
+  for(i = 0; i < populationSize; ++i) 
   {
     stD += pow(population[i]->fitness(fitnessFunction, population[i], population[i]->getNumGenes()) - mean, 2);
   }
@@ -347,10 +313,4 @@ void GA::setPopulation(Chromosome** p)
     }
 }
 
-int strToInt(std::string line)
-{
-    std::stringstream ss(line);
-    int x = 0;
-    ss >> x;
-    return x;
-}
+// ;)
