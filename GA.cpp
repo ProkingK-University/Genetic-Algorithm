@@ -1,6 +1,4 @@
 #include "GA.h"
-#include <sstream>
-#include <iostream>
 
 GA::GA(int populationSize, RandomGenerator* rand, int numGenes, int selectionSize) : populationSize(populationSize), selectionSize(selectionSize)
 {
