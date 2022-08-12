@@ -1,7 +1,5 @@
 #include "Chromosome.h"
 
-#include<iostream>
-
 Chromosome::Chromosome(int numGenes, RandomGenerator* rand)
 {
     if (numGenes < 0)
@@ -131,6 +129,8 @@ Chromosome* Chromosome::crossOver(Chromosome* c2)
 
         c = new Chromosome(nGenes, numGenes);
 
+        delete [] nGenes;
+
         return c;
     }
     
@@ -138,7 +138,6 @@ Chromosome* Chromosome::crossOver(Chromosome* c2)
 
 Chromosome* Chromosome::mutate()
 {
-    int j = 0;
     bool* nGenes = new bool[numGenes];
 
     for (int i = numGenes-1; i >= 0; i--)
@@ -154,6 +153,8 @@ Chromosome* Chromosome::mutate()
     }
 
     Chromosome* c = new Chromosome(nGenes, numGenes);
+
+    delete [] nGenes;
 
     return c;
 }
@@ -185,3 +186,5 @@ std::string Chromosome::toString()
 }
 
 bool* Chromosome::getGenes() {return genes;}
+
+// ;)
