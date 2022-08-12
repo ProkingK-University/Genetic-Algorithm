@@ -129,6 +129,7 @@ Chromosome* Chromosome::crossOver(Chromosome* c2)
 
         c = new Chromosome(nGenes, numGenes);
 
+        nGenes = NULL;
         delete [] nGenes;
 
         return c;
@@ -154,6 +155,7 @@ Chromosome* Chromosome::mutate()
 
     Chromosome* c = new Chromosome(nGenes, numGenes);
 
+    nGenes = NULL;
     delete [] nGenes;
 
     return c;
