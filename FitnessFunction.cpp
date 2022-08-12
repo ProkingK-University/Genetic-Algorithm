@@ -1,5 +1,4 @@
 #include "FitnessFunction.h"
-#include <iostream>
 
 double FitnessFunction::calculateFitness(Chromosome* chromosome, int numGenes)
 {
