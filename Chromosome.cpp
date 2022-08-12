@@ -140,19 +140,19 @@ Chromosome* Chromosome::mutate()
 {
     int j = 0;
     bool* nGenes = new bool[numGenes];
-    bool* inverseGenes = new bool[numGenes];
 
     for (int i = numGenes-1; i >= 0; i--)
     {
-        inverseGenes[j] = genes[i];
-        j++;
+        if (genes[i] == true)
+        {
+            nGenes[i] = false;
+        }
+        else
+        {
+            nGenes[i] = true;
+        }
     }
 
-    for (int i = 0; i < numGenes; i++)
-    {
-        nGenes[i] = inverseGenes[i];
-    }
-    
     Chromosome* c = new Chromosome(nGenes, numGenes);
 
     return c;
