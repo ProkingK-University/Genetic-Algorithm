@@ -52,6 +52,15 @@ Chromosome** GA::run(FitnessFunction* fitnessFunction)
         offspring[i] = nChromosomes[0];
         offspring[i+1] = nChromosomes[1];
         i++;
+
+        for (int j = 0; j < 2; j++)
+        {
+            nChromosomes[j] = NULL;
+            delete nChromosomes[j];
+        }
+
+        nChromosomes = NULL;
+        delete [] nChromosomes;
     }
 
     for (int i = 0; i < selectionSize; i++)
@@ -73,8 +82,36 @@ Chromosome** GA::run(FitnessFunction* fitnessFunction)
                 break;
             }
         }
+
+        delete dyingChromosome;
     }
+
+    for (int i = 0; i < populationSize; i++)
+    {
+        winners[i] = NULL;
+        losers[i] = NULL;
+
+        delete winners[i];
+        delete losers[i];
+    }
+
+    winners = NULL;
+    losers = NULL;
+
+    delete [] winners;
+    delete [] losers;
+
     
+    for (int i = 0; i < 3*selectionSize; i++)
+    {
+        offspring[i] = NULL;
+
+        delete offspring[i];
+    }
+
+    offspring = NULL;
+    delete [] offspring;
+
     return P;
 }
 
@@ -103,14 +140,9 @@ double** GA::run(FitnessFunction* fitnessFunction, int numGenerations)
 
 Chromosome** GA::selection(FitnessFunction* fitnessFunction)
 {
-    /*int j = 0;
-    Chromosome** p = new Chromosome*[populationSize];
-
-    for (int i = populationSize-1; i >= 0; i--)
-    {
-        p[j] = new Chromosome(inverseSelection(fitnessFunction)[i]);
-        j++;
-    }*/
+    int j = 0;
+    double k1 = 0;
+    std::string k2 = "";
 
     double fitness[populationSize];
     std::string id[populationSize];
@@ -123,11 +155,6 @@ Chromosome** GA::selection(FitnessFunction* fitnessFunction)
 
         id[i] = population[i]->toString();
     }
-
-    int j = 0;
-
-    double k1 = 0;
-    std::string k2 = "";
 
     for(int i = 1; i < populationSize; i++)
     {
@@ -174,53 +201,6 @@ Chromosome** GA::inverseSelection(FitnessFunction* fitnessFunction)
         p[j] = new Chromosome(selection(fitnessFunction)[i]);
         j++;
     }
-    
-    /*double fitness[populationSize];
-    std::string id[populationSize];
-
-    Chromosome** p = new Chromosome*[populationSize];
-
-    for (int i = 0; i < populationSize; i++)
-    {
-        fitness[i] = population[i]->fitness(fitnessFunction, population[i], population[i]->getNumGenes());
-
-        id[i] = population[i]->toString();
-    }
-
-    int i = 0;
-    int j = 0;
-
-    double k1 = 0;
-    std::string k2 = "";
-
-    for (i = 1; i < populationSize; i++)
-    { 
-        k1 = fitness[i];
-        k2 = id[i];
-        j = i - 1;
-
-        while (j >= 0 && fitness[j] > k1)
-        { 
-            fitness[j + 1] = fitness[j];
-            id[j+1] = id[j];
-            j = j - 1; 
-        }
-
-        fitness[j + 1] = k1;
-        id[j+1] = k2;
-    }
-
-    for (int i = 0; i < populationSize; i++)
-    {
-        for (int j = 0; j < populationSize; j++)
-        {
-            if (fitness[i] == population[j]->fitness(fitnessFunction, population[j], population[j]->getNumGenes()) && id[i] == population[j]->toString())
-            {
-                p[i] = new Chromosome (population[j]);
-                break;
-            }
-        }  
-    }*/
     
     return p;
 }
