@@ -11,18 +11,18 @@ Chromosome::Chromosome(int numGenes, RandomGenerator* rand)
         this->numGenes = numGenes;
     }
 
-    genes = new bool[numGenes];
+    genes = new bool[this->numGenes];
 
     if (rand == NULL)
     {
-        for (int i = 0; i < numGenes; i++)
+        for (int i = 0; i < this->numGenes; i++)
         {
             genes[i] = false;
         }
     }
     else
     {
-        for (int i = 0; i < numGenes; i++)
+        for (int i = 0; i < this->numGenes; i++)
         {
             genes[i] = rand->randomBool();
         }
@@ -56,7 +56,7 @@ Chromosome::Chromosome(bool* genes, int numGenes)
     {
         this->numGenes = 0;
 
-        genes = new bool[0];
+        this->genes = new bool[0];
     }
     else
     {
@@ -68,7 +68,7 @@ Chromosome::Chromosome(bool* genes, int numGenes)
         {
             for (int i = 0; i < this->numGenes; i++)
             {
-                genes[i] = false;
+                this->genes[i] = false;
             }
         }
         else
@@ -107,7 +107,7 @@ Chromosome* Chromosome::crossOver(Chromosome* c2)
 
     if (c2 == NULL)
     {
-        c = this;
+        c = new Chromosome(this);
 
         return c;
     }
@@ -134,7 +134,6 @@ Chromosome* Chromosome::crossOver(Chromosome* c2)
 
         return c;
     }
-    
 }
 
 Chromosome* Chromosome::mutate()
