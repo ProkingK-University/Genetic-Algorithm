@@ -176,53 +176,6 @@ Chromosome** GA::selection(FitnessFunction* fitnessFunction)
         p[j+1] = k2;
     }
 
-    /*int j = 0;
-    double k1 = 0;
-    std::string k2 = "";
-
-    double fitness[populationSize];
-    std::string id[populationSize];
-    
-    Chromosome** p = new Chromosome*[populationSize];
-
-    for (int i = 0; i < populationSize; i++)
-    {
-        fitness[i] = population[i]->fitness(fitnessFunction, population[i], population[i]->getNumGenes());
-
-        id[i] = population[i]->toString();
-    }
-
-    for(int i = 1; i < populationSize; i++)
-    {
-        k1 = fitness[i];
-        k2 = id[i];
-
-        j = i-1;
-
-        while(j >= 0 && fitness[j] < k1)
-        {
-            fitness[j+1] = fitness[j];
-            id[j+1] = id[j];
-
-            j--;
-        }
-
-        fitness[j+1] = k1;
-        id[j+1] = k2;
-    }
-
-    for (int i = 0; i < populationSize; i++)
-    {
-        for (int j = 0; j < populationSize; j++)
-        {
-            if (fitness[i] == population[j]->fitness(fitnessFunction, population[j], population[j]->getNumGenes()) && id[i] == population[j]->toString())
-            {
-                p[i] = population[j];
-                break;
-            }
-        }
-    }*/
-
     return p;
 }
 
