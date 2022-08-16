@@ -1,4 +1,5 @@
 #include "GA.h"
+#include <iostream>
 
 GA::GA(int populationSize, RandomGenerator* rand, int numGenes, int selectionSize) : populationSize(populationSize), selectionSize(selectionSize)
 {
@@ -70,20 +71,20 @@ Chromosome** GA::run(FitnessFunction* fitnessFunction)
 
     for (int i = 0; i < 3*selectionSize; i++)
     {
-        Chromosome* dyingChromosome = new Chromosome(losers[i]);
+        Chromosome* dyingChromosome = losers[i];
 
         for (int u = 0; u < populationSize; u++)
         {
-            if (P[u]->toString() == dyingChromosome->toString())
+            if (P[u] == dyingChromosome)
             {
-                P[u] = offspring[i];
+                P[u] = new Chromosome(offspring[i]);
                 break;
             }
         }
 
         delete dyingChromosome;
     }
-
+    
     for (int i = 0; i < populationSize; i++)
     {
         winners[i] = NULL;
@@ -140,6 +141,43 @@ Chromosome** GA::selection(FitnessFunction* fitnessFunction)
 {
     int j = 0;
     double k1 = 0;
+    Chromosome* k2;;
+
+    double fitness[populationSize];
+    
+    Chromosome** p = new Chromosome*[populationSize];
+
+    for (int i = 0; i < populationSize; i++)
+    {
+        p[i] = population[i];
+    }
+
+    for (int i = 0; i < populationSize; i++)
+    {
+        fitness[i] = population[i]->fitness(fitnessFunction, population[i], population[i]->getNumGenes());
+    }
+
+    for(int i = 1; i < populationSize; i++)
+    {
+        k1 = fitness[i];
+        k2 = p[i];
+
+        j = i-1;
+
+        while(j >= 0 && fitness[j] < k1)
+        {
+            fitness[j+1] = fitness[j];
+            p[j+1] = p[j];
+
+            j--;
+        }
+
+        fitness[j+1] = k1;
+        p[j+1] = k2;
+    }
+
+    /*int j = 0;
+    double k1 = 0;
     std::string k2 = "";
 
     double fitness[populationSize];
@@ -179,11 +217,11 @@ Chromosome** GA::selection(FitnessFunction* fitnessFunction)
         {
             if (fitness[i] == population[j]->fitness(fitnessFunction, population[j], population[j]->getNumGenes()) && id[i] == population[j]->toString())
             {
-                p[i] = new Chromosome (population[j]);
+                p[i] = population[j];
                 break;
             }
-        }  
-    }
+        }
+    }*/
 
     return p;
 }
@@ -196,7 +234,7 @@ Chromosome** GA::inverseSelection(FitnessFunction* fitnessFunction)
 
     for (int i = populationSize-1; i >= 0; i--)
     {
-        p[j] = new Chromosome(selection(fitnessFunction)[i]);
+        p[j] = selection(fitnessFunction)[i];
         j++;
     }
     
