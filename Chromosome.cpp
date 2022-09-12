@@ -1,5 +1,6 @@
 #include "Chromosome.h"
 
+//This constructor create a random array of genes
 Chromosome::Chromosome(int numGenes, RandomGenerator* rand)
 {
     if (numGenes < 0)
@@ -50,6 +51,7 @@ Chromosome::Chromosome(Chromosome* chromosome)
     }  
 }
 
+//his condstructor creates a new chromosome from the passed in gene array
 Chromosome::Chromosome(bool* genes, int numGenes)
 {
     if (numGenes < 0)
@@ -87,6 +89,7 @@ Chromosome::~Chromosome()
     delete [] genes;
 }
 
+//This returns fittness of chromosome
 double Chromosome::fitness(FitnessFunction* fitnessFunction, Chromosome* chromosome, int numGenes)
 {
     if (fitnessFunction == NULL || chromosome == NULL || numGenes <= 0)
@@ -101,6 +104,7 @@ double Chromosome::fitness(FitnessFunction* fitnessFunction, Chromosome* chromos
 
 int Chromosome::getNumGenes() {return numGenes;}
 
+//Returns new chromosome where the second half of it is the passes in chromosome
 Chromosome* Chromosome::crossOver(Chromosome* c2)
 {
     Chromosome* c;
@@ -136,6 +140,7 @@ Chromosome* Chromosome::crossOver(Chromosome* c2)
     }
 }
 
+//Inverts the the chromosome genes
 Chromosome* Chromosome::mutate()
 {
     bool* nGenes = new bool[numGenes];
@@ -160,6 +165,7 @@ Chromosome* Chromosome::mutate()
     return c;
 }
 
+//Converts chromosome genes to a string
 std::string Chromosome::toString()
 {
     if (numGenes == 0)

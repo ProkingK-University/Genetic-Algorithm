@@ -1,6 +1,7 @@
 #include "GA.h"
 #include <iostream>
 
+//Creates an array of chromosomes
 GA::GA(int populationSize, RandomGenerator* rand, int numGenes, int selectionSize) : populationSize(populationSize), selectionSize(selectionSize)
 {
     population = new Chromosome*[populationSize];
@@ -36,6 +37,7 @@ GA::~GA()
     delete [] population;
 }
 
+// Runs the genetic algorithm
 Chromosome** GA::run(FitnessFunction* fitnessFunction)
 {
     Chromosome** winners = selection(fitnessFunction);
@@ -114,6 +116,7 @@ Chromosome** GA::run(FitnessFunction* fitnessFunction)
     return P;
 }
 
+//Runs multiple generations
 double** GA::run(FitnessFunction* fitnessFunction, int numGenerations)
 {
     double** results = new double*[numGenerations];
@@ -137,6 +140,7 @@ double** GA::run(FitnessFunction* fitnessFunction, int numGenerations)
     return results;
 }
 
+//Sorts the population from strongest to weakest
 Chromosome** GA::selection(FitnessFunction* fitnessFunction)
 {
     int j = 0;
@@ -179,6 +183,7 @@ Chromosome** GA::selection(FitnessFunction* fitnessFunction)
     return p;
 }
 
+//Sorts the population from weakest to strongest
 Chromosome** GA::inverseSelection(FitnessFunction* fitnessFunction)
 {
     int j = 0;
@@ -194,6 +199,7 @@ Chromosome** GA::inverseSelection(FitnessFunction* fitnessFunction)
     return p;
 }
 
+//Mixes two chromosomes
 Chromosome** GA::crossOver(Chromosome* c1, Chromosome* c2)
 {
     Chromosome** c = new Chromosome*[2];
@@ -204,6 +210,7 @@ Chromosome** GA::crossOver(Chromosome* c1, Chromosome* c2)
     return c;
 }
 
+//Inverts the passed in chromosomes
 Chromosome* GA::mutate(Chromosome* c1)
 {
     Chromosome* c = new Chromosome(c1->mutate());
@@ -211,6 +218,7 @@ Chromosome* GA::mutate(Chromosome* c1)
     return c;
 }
 
+//Calculates avarage fitness
 double GA::calculateAvgAccuracy(FitnessFunction* fitnessFunction)
 {
     double fitness = 0;
@@ -225,6 +233,7 @@ double GA::calculateAvgAccuracy(FitnessFunction* fitnessFunction)
     return fitness;
 }
 
+//Calculates the standard deviation
 double GA::calculateStd(FitnessFunction* fitnessFunction)
 {
     int i = 0;
@@ -247,6 +256,7 @@ double GA::calculateStd(FitnessFunction* fitnessFunction)
   return sqrt(stD / populationSize);
 }
 
+//Calculates variance
 double GA::calculateVariance()
 {
     double var = 0;
@@ -274,6 +284,7 @@ double GA::calculateVariance()
     return var;
 }
 
+//Setter for population array
 void GA::setPopulation(Chromosome** p)
 {
     for (int i = 0; i < populationSize; i++)

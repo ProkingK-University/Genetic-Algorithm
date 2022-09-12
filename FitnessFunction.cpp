@@ -1,5 +1,6 @@
 #include "FitnessFunction.h"
 
+//Calculates the fittness of the chromosome by counting the number of true and dividing by the number of genes
 double FitnessFunction::calculateFitness(Chromosome* chromosome, int numGenes)
 {
     double m = 0;
